@@ -1,7 +1,6 @@
 package com.company.enroller.controllers;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.company.enroller.model.Meeting;
 import com.company.enroller.model.Participant;
@@ -11,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.company.enroller.model.Meeting;
-import com.company.enroller.persistence.MeetingService;
 
 @RestController
 @RequestMapping("/meetings")
@@ -35,31 +31,29 @@ public class MeetingRestController {
     public ResponseEntity<?> getMeetingById(@PathVariable("id") long id) {
         Meeting meeting = meetingService.findById(id);
         if (meeting == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(meeting, HttpStatus.OK);
     }
 
     @RequestMapping (value = "", method = RequestMethod.POST)
     public ResponseEntity<?> addMeeting(
-            @RequestBody Meeting meeting,
-            @RequestParam(value = "key", required = false) String key)
-
+            @RequestBody Meeting meeting)
     {
         if (meetingService.findByTitle(meeting.getTitle()) != null) {
-            return new ResponseEntity<String>(
+            return new ResponseEntity<>(
                     "Unable to create. A meeting with title " + meeting.getTitle() + " already exist.",
                     HttpStatus.CONFLICT);
         }
         meetingService.add(meeting);
-        return new ResponseEntity<Meeting>(meeting, HttpStatus.CREATED);
+        return new ResponseEntity<>(meeting, HttpStatus.CREATED);
     }
 
     @RequestMapping (value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         Meeting meeting = meetingService.findById(id);
         if (meeting == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         meetingService.delete(meeting);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -69,7 +63,7 @@ public class MeetingRestController {
     public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody Meeting updatedMeeting) {
         Meeting meeting = meetingService.findById(id);
         if (meeting == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         meeting.setTitle(updatedMeeting.getTitle());
         meeting.setDescription(updatedMeeting.getDescription());
@@ -82,7 +76,7 @@ public class MeetingRestController {
     public ResponseEntity<?> searchByTitle(@RequestParam("title") String title) {
         Meeting meeting = meetingService.findByTitle(title);
         if (meeting == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(meeting, HttpStatus.OK);
     }
