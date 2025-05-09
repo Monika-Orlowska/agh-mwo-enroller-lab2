@@ -45,4 +45,18 @@ public class ParticipantService {
         transaction.commit();
     }
 
+    public Collection<Participant> getAllSorted(String sortBy, String sortOrder) {
+        String hql = "FROM Participant ORDER BY " + sortBy + " " + sortOrder;
+        Query query = connector.getSession().createQuery(hql);
+        return query.list();
+
+
+    }
+    public Collection<Participant> getFilteredAndSorted(String key, String sortBy, String sortOrder) {
+        String hql = "FROM Participant WHERE lower(login) LIKE :key ORDER BY " + sortBy + " " + sortOrder;
+        Query query = connector.getSession().createQuery(hql);
+        query.setParameter("key", "%" + key.toLowerCase() + "%");
+        return query.list();
+    }
+
 }

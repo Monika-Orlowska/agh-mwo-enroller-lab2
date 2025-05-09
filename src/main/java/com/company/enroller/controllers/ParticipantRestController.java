@@ -18,8 +18,22 @@ public class ParticipantRestController {
 	ParticipantService participantService;
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ResponseEntity<?> getParticipants() {
-		Collection<Participant> participants = participantService.getAll();
+	public ResponseEntity<?> getParticipants(
+			@RequestParam(value = "sortBy", defaultValue = "login") String sortBy,
+			@RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder,
+			@RequestParam(value = "key", required = false) String key) {
+
+		if (!sortOrder.equalsIgnoreCase("ASC") && !sortOrder.equalsIgnoreCase("DESC")) {
+			return new ResponseEntity<String>("Invalid sortOrder value. Allowed values are 'ASC' or 'DESC'.", HttpStatus.BAD_REQUEST);
+		}
+
+		Collection<Participant> participants;
+		if (key != null && !key.isEmpty()) {
+			participants = participantService.getFilteredAndSorted(key, sortBy, sortOrder);
+		} else {
+			participants = participantService.getAllSorted(sortBy, sortOrder);
+		}
+
 		return new ResponseEntity<Collection<Participant>>(participants, HttpStatus.OK);
 	}
 
