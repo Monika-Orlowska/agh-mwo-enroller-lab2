@@ -1,18 +1,20 @@
 package com.company.enroller.model;
 
-import javax.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "participant")
+
 public class Participant {
 
 	@Id
 	private String login;
 
-	@Column
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
 	public String getLogin() {
@@ -29,5 +31,6 @@ public class Participant {
 
 	public void setPassword(String password) {
 		this.password = password;
+
 	}
 }

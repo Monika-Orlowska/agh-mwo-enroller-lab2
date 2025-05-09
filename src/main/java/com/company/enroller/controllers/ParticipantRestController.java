@@ -77,5 +77,4 @@ public class ParticipantRestController {
 		participantService.update(participant);
 		return new ResponseEntity<Participant>(HttpStatus.OK);
 	}
-
 }

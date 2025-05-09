@@ -1,5 +1,4 @@
 package com.company.enroller.persistence;
-
 import org.hibernate.Session;
 
 public class DatabaseConnector {
@@ -28,5 +27,4 @@ public class DatabaseConnector {
 	public Session getSession() {
 		return session;
 	}
-
 }
